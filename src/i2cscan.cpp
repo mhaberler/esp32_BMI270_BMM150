@@ -2,12 +2,13 @@
 #ifdef M5_I2CSCAN
 
 #include <M5Unified.h>
+#define I2C_MAX 0x78
 
 void i2cScan(void) {
   Serial.printf("\ninternal I2C devices: ('Wire'):\n");
   bool scan[128];
   M5.In_I2C.scanID(scan);
-  for (int i = 8; i < 0x7f; ++i) {
+  for (int i = 8; i < I2C_MAX; ++i) {
     if (scan[i]) {
       Serial.printf("intern: 0x%x\n", i);
     }
@@ -15,7 +16,7 @@ void i2cScan(void) {
 #ifdef SECONDARY_I2C_PORT
   Serial.printf("\nexternal I2C (red port) devices: ('Wire1'):\n");
   M5.Ex_I2C.scanID(scan);
-  for (int i = 8; i < 0x7f; ++i) {
+  for (int i = 8; i < I2C_MAX; ++i) {
     if (scan[i]) {
       Serial.printf("extern: 0x%x\n", i);
     }
@@ -31,7 +32,7 @@ void i2cScan(void) {
 
 void printI2CBusScan(TwoWire &theWire, const char *tag) {
   theWire.begin();
-  for (uint8_t addr = 0x8; addr <= 0x7f; addr++) {
+  for (uint8_t addr = 0x8; addr <= I2C_MAX; addr++) {
     theWire.beginTransmission(addr);
     if (theWire.endTransmission() == 0) {
       Serial.printf("%s0x%x\n", tag, addr);
