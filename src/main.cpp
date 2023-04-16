@@ -4,7 +4,7 @@
 #include <M5Unified.h>
 #endif
 
-BoschSensorClass myIMU(Wire);
+BoschSensorClass *myIMU;
 
 extern void i2cScan(void);
 
@@ -31,22 +31,26 @@ void setup() {
   while (!Serial) {
     yield();
   }
-  i2cScan();
 
-  myIMU.debug(Serial);
-  // myIMU.onInterrupt(print_data);
-  myIMU.begin();
+  i2cScan();
+  SENSOR_BUS.begin();
+
+  myIMU = new BoschSensorClass(SENSOR_BUS);
+
+  myIMU->debug(Serial);
+  // myIMU->onInterrupt(print_data);
+  myIMU->begin();
 
   Serial.print("Accelerometer sample rate = ");
-  Serial.println(myIMU.accelerationSampleRate());
+  Serial.println(myIMU->accelerationSampleRate());
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   float x, y, z;
 
-  if (myIMU.accelerationAvailable()) {
-    myIMU.readAcceleration(x, y, z);
+  if (myIMU->accelerationAvailable()) {
+    myIMU->readAcceleration(x, y, z);
 
     Serial.print("accel: \t");
     Serial.print(x);
@@ -57,9 +61,9 @@ void loop() {
     Serial.println();
   }
 
-  if (myIMU.gyroscopeAvailable()) {
+  if (myIMU->gyroscopeAvailable()) {
 
-    myIMU.readGyroscope(x, y, z);
+    myIMU->readGyroscope(x, y, z);
 
     Serial.print("gyro: \t");
     Serial.print(x);
@@ -70,9 +74,9 @@ void loop() {
     Serial.println();
   }
 
-  if (myIMU.magneticFieldAvailable()) {
+  if (myIMU->magneticFieldAvailable()) {
 
-    myIMU.readMagneticField(x, y, z);
+    myIMU->readMagneticField(x, y, z);
 
     Serial.print("mag: \t");
     Serial.print(x);
