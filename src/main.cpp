@@ -1,10 +1,10 @@
 
-#include "Arduino_BMI270_BMM150.h"
 #ifdef M5STACK
 #include <M5Unified.h>
 #endif
+#include "Arduino_BMI270_BMM150.h"
 
-BoschSensorClass myIMU(Wire);
+BoschSensorClass myIMU(SENSOR_BUS);
 
 extern void i2cScan(void);
 
@@ -82,4 +82,5 @@ void loop() {
     Serial.print(z);
     Serial.println();
   }
+  delay(500);
 }
