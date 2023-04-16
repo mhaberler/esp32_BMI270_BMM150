@@ -51,40 +51,18 @@ void loop() {
 
   if (myIMU->accelerationAvailable()) {
     myIMU->readAcceleration(x, y, z);
-
-    Serial.print("accel: \t");
-    Serial.print(x);
-    Serial.print('\t');
-    Serial.print(y);
-    Serial.print('\t');
-    Serial.print(z);
-    Serial.println();
+    Serial.printf(">accelX: %f\n>accelY: %f\n>accelz: %f\n", x, y, z);
   }
 
   if (myIMU->gyroscopeAvailable()) {
-
     myIMU->readGyroscope(x, y, z);
-
-    Serial.print("gyro: \t");
-    Serial.print(x);
-    Serial.print('\t');
-    Serial.print(y);
-    Serial.print('\t');
-    Serial.print(z);
-    Serial.println();
+    Serial.printf(">gyroX: %f\n>gyroY: %f\n>gyroZ: %f\n", x, y, z);
   }
 
   if (myIMU->magneticFieldAvailable()) {
 
     myIMU->readMagneticField(x, y, z);
-
-    Serial.print("mag: \t");
-    Serial.print(x);
-    Serial.print('\t');
-    Serial.print(y);
-    Serial.print('\t');
-    Serial.print(z);
-    Serial.println();
+    Serial.printf(">magX: %f\n>magY: %f\n>magZ: %f\n", x, y, z);
   }
-  delay(500);
+  delay(10);
 }
