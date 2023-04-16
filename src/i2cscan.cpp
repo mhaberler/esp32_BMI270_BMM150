@@ -1,8 +1,8 @@
+#define I2C_MAX 0x78
 
 #ifdef M5_I2CSCAN
 
 #include <M5Unified.h>
-#define I2C_MAX 0x78
 
 void i2cScan(void) {
   Serial.printf("\ninternal I2C devices: ('Wire'):\n");
