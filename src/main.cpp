@@ -23,6 +23,13 @@ void setup() {
                             // 255=max) (※ not NeoPixel)
   M5.begin(cfg);
   // M5.Ex_I2C.begin();
+#ifdef RED_PORT
+  Wire.begin(32, 33, 100000UL);
+#else
+  Wire.begin(21, 22,
+             100000UL); // Set the frequency of the SDA SCL.
+                        // 设置SDA和SCL的频率
+#endif
 #else
   Serial.begin(115200);
 #endif
@@ -33,9 +40,9 @@ void setup() {
   }
 
   i2cScan();
-  SENSOR_BUS.begin();
+  // SENSOR_BUS.begin();
 
-  myIMU = new BoschSensorClass(SENSOR_BUS);
+  myIMU = new BoschSensorClass(Wire);
 
   myIMU->debug(Serial);
   // myIMU->onInterrupt(print_data);
@@ -64,5 +71,5 @@ void loop() {
     myIMU->readMagneticField(x, y, z);
     Serial.printf(">magX: %f\n>magY: %f\n>magZ: %f\n", x, y, z);
   }
-  delay(10);
+  delay(1000);
 }
