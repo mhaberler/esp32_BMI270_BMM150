@@ -1,10 +1,14 @@
 
-#ifdef M5STACK
+#ifdef M5UNIFIED
 #include <M5Unified.h>
 #endif
 #include "Arduino_BMI270_BMM150.h"
 
 BoschSensorClass *myIMU;
+
+#ifndef I2CSPEED
+#define I2CSPEED 100000
+#endif
 
 extern void i2cScan(void);
 
@@ -14,7 +18,7 @@ void print_data() {
 }
 
 void setup() {
-#ifdef M5STACK
+#ifdef M5UNIFIED
   auto cfg = M5.config();
   cfg.serial_baudrate = 115200;
   cfg.internal_imu = false; // default=true. use internal IMU.
@@ -22,12 +26,11 @@ void setup() {
   cfg.led_brightness = 128; // default= 0. system LED brightness (0=off /
                             // 255=max) (※ not NeoPixel)
   M5.begin(cfg);
-  // M5.Ex_I2C.begin();
 #ifdef RED_PORT
-  Wire.begin(32, 33, 100000UL);
+  Wire.begin(32, 33, I2CSPEED);
 #else
   Wire.begin(21, 22,
-             100000UL); // Set the frequency of the SDA SCL.
+             I2CSPEED); // Set the frequency of the SDA SCL.
                         // 设置SDA和SCL的频率
 #endif
 #else
@@ -40,12 +43,13 @@ void setup() {
   }
 
   i2cScan();
-  // SENSOR_BUS.begin();
 
   myIMU = new BoschSensorClass(Wire);
 
   myIMU->debug(Serial);
-  // myIMU->onInterrupt(print_data);
+#ifdef __MBED__
+  myIMU->onInterrupt(print_data);
+#endif
   myIMU->begin();
 
   Serial.print("Accelerometer sample rate = ");
@@ -71,5 +75,5 @@ void loop() {
     myIMU->readMagneticField(x, y, z);
     Serial.printf(">magX: %f\n>magY: %f\n>magZ: %f\n", x, y, z);
   }
-  delay(1000);
+  delay(50);
 }
